@@ -60,15 +60,24 @@ foreach($customobj in $customobjs){
 
     $instance = Get-SCOMClassInstance -Id $InstanceID
 
+    $workflow = Get-SCOMRule -Name $customobj.WorkflowName -ErrorAction SilentlyContinue
+    if(!$workflow){
+        $workflow = Get-SCOMMonitor -Name $customobj.WorkflowName
+        if(!$workflow){
+            $workflow = Get-SCOMDiscovery -Name $customobj.WorkflowName
+        }
+    }
+
     $obj = [PSCustomObject]@{
         InstanceID = $instance.id
         InstanceDisplayName = $instance.DisplayName
         InstanceFullName = $instance.FullName
         InstanceName = $instance.Name
-        WorkflowName = $customobj.WorkflowName       
+        WorkflowDisplayNameName = $workflow.DisplayName 
+        WorkflowName = $workflow.Name
+              
     }
-
     $objs += $obj
 }
 
-$objs | Sort-Object WorkflowName,InstanceName | Out-GridView
+$objs | Sort-Object WorkflowDisplayNameName,InstanceName | Out-GridView
