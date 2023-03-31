@@ -36,6 +36,19 @@ param(
 
 Write-Host "Getting running workflows of the health service. It might take several minutes depending on the number of workflows......" -ForegroundColor Yellow
 
+$splitpaths = $stealthcsvpath.Split("\")
+$path = ""
+foreach($splitpath in $splitpaths)
+{
+   if ($splitpath -cnotmatch ".csv")
+   {
+        $path = $path + "\" + $splitpath
+   } 
+}
+
+$outputpath = $path.TrimStart("\")
+$outputfile = $outputpath + "\" + "output.csv"
+
 Import-Module OperationsManager
 $customobjs = Import-Csv -Path $stealthcsvpath
 $InstanceIDs = $objs = @()
@@ -80,4 +93,8 @@ foreach($customobj in $customobjs){
     $objs += $obj
 }
 
+Write-Host "Dumping file to $($outputfile) .." -ForegroundColor Cyan
+$objs | Export-Csv $outputfile
+Start-Sleep 5
+Write-Host "`nDisplaying data in Out Grid View .." -ForegroundColor Cyan
 $objs | Sort-Object WorkflowDisplayNameName,InstanceName | Out-GridView
