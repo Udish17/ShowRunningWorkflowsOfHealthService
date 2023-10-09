@@ -8,7 +8,8 @@
 # using Stealth software.        
 # 
 # Below are the instructions:
-# 1. Stop the MMA on the server.
+# 1. Stop the MMA on the server. It is important to note that the MMA stops properly. In cases, where the MMA is under heavy load then it might time out and lock the edb.
+# In such case, incease the Windows Service Pipe timeout and reboot the MS. Let the workflow count increase and then try to stop the MMA. reg add "HKLM\SYSTEM\CurrentControlSet\Control" /v "ServicesPipeTimeout" /t REG_DWORD /d 60000 /f
 # 2. Copy the HealthServiceStore.edb file from the installation directory. Like
 #    Management Server : C:\Program Files\Microsoft System Center\Operations Manager\Server\Health Service State\Health Service Store
 #    or Agent C:\Program Files\Microsoft Monitoring Agent\Agent\Health Service State\Health Service Store
